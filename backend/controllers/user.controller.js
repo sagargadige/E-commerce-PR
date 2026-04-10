@@ -1,5 +1,7 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
+import envConfig from "../configs/envConfig.js";
 
 //SIGN UP
 export const signup = async (req, res) => {
@@ -17,7 +19,7 @@ export const signup = async (req, res) => {
       if (data) {
         return res.status(400).json({
           success: false,
-          message: "User Exit..",
+          message: "User Exists..",
         });
       } else {
         const hashPassword = await bcrypt.hash(password, 10);
@@ -29,7 +31,7 @@ export const signup = async (req, res) => {
         });
         return res.status(201).json({
           success: true,
-          message: "Login Successfull",
+          message: "Signup Successfull",
           user: newUser,
         });
       }
@@ -64,10 +66,12 @@ export const login=async(req,res)=>{
                 })
             }
             else{
+              const token=jwt.sign({id:user.id},envConfig.SECRET_KEY,{expiresIn:'1d'});
                 return res.status(200).json({
                     success:true,
-                    message:"User created",
-                    user:user
+                    message:"User Information",
+                    user:user,
+                    token:token
                 })
             }
         }

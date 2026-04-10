@@ -1,17 +1,19 @@
 import express, { Router } from 'express'
 import database from './configs/database.js';
-import router from './routers/user.route.js';
 import cartRouter from './routers/cart.route.js';
 import categoryRouter from './routers/category.route.js';
 import productRouter from './routers/product.route.js';
+import userRouter from './routers/user.route.js';
+import userAuth from './middlewares/userAuth.js';
+import adminAuth from './middlewares/adminAuth.js';
 const app=express();
 const port=3200;
 app.use(express.json());
 
-app.use('/api',router);
-app.use('/api/cart',cartRouter);
-app.use('/api/category',categoryRouter);
-app.use('/api/product',productRouter);
+app.use('/api/user',userRouter);
+app.use('/api/product',userAuth,adminAuth,productRouter);
+app.use('/api/category',userAuth,adminAuth,categoryRouter);
+app.use('/api/cart',userAuth,cartRouter);
 
 
 app.listen(port,(error)=>{
