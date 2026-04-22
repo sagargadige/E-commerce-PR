@@ -44,11 +44,38 @@ export const signup = async (req, res) => {
   }
 };
 
+//GET ALL USERS
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({});
+    return res.status(200).json({
+      success: true,
+      message: "All Users",
+      totalUsers: users.length,
+      users: users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      users: [],
+      totalUsers: 0,
+    });
+  }
+};
+
 //LOG IN 
 
 export const login=async(req,res)=>{
     try {
         const {email,password}=req.body
+
+        if(!email || !password){
+            return res.status(400).json({
+                success:false,
+                message:"Email and password are required"
+            })
+        }
 
         const user = await userModel.findOne({email}).select("+password");
 
@@ -67,10 +94,13 @@ export const login=async(req,res)=>{
             }
             else{
               const token=jwt.sign({id:user.id},envConfig.SECRET_KEY,{expiresIn:'1d'});
+              const userData = user.toObject();
+              delete userData.password;
+
                 return res.status(200).json({
                     success:true,
                     message:"User Information",
-                    user:user,
+                    user:userData,
                     token:token
                 })
             }
@@ -78,6 +108,7 @@ export const login=async(req,res)=>{
     } catch (error) {
         return res.status(500).json({
             success:false,
+            message:error.message,
             error:error.message
         })
     }
