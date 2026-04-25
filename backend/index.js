@@ -7,11 +7,13 @@ import userRouter from './routers/user.route.js';
 import userAuth from './middlewares/userAuth.js';
 import adminAuth from './middlewares/adminAuth.js';
 import cors from 'cors';
+import envConfig from './configs/envConfig.js';
 
+const PORT = process.env.PORT || envConfig.PORT || 3200;
 const app=express();
-const port=3200;
+
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:['http://localhost:5173','https://e-commerce-pr-theta.vercel.app/'],
     allowedHeaders:["Content-Type","Authorization"],
     methods:['GET','POST','DELETE','PATCH']
 }))
@@ -23,12 +25,12 @@ app.use('/api/category',userAuth,adminAuth,categoryRouter);
 app.use('/api/cart',userAuth,cartRouter);
 
 
-app.listen(port,(error)=>{
+app.listen(PORT,(error)=>{
     if(error){
         console.log({error:error.message})
     }
     else{
         console.log('server start..')
-        console.log('http://localhost:'+port);
+        console.log('http://localhost:'+PORT);
     }
 })

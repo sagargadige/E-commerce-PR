@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getProductImageUrl } from "./productImages.js";
 
-export const API_URL = "http://localhost:3200";
+export const API_URL = "https://e-commerce-pr.onrender.com";
 
 export const authHeader = (token = localStorage.getItem("token")) => {
   return {
