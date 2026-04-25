@@ -8,6 +8,7 @@ import {
   addProductToCart,
   authHeader,
   fallbackImage,
+  getApiErrorMessage,
   getCartsFromResponse,
   getLoginUser,
   getProductImage,
@@ -52,7 +53,7 @@ const Cart = () => {
 
       setCartItems(finalCart);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to load cart");
+      toast.error(getApiErrorMessage(error, "Unable to load cart"));
     } finally {
       setLoading(false);
     }
@@ -64,7 +65,7 @@ const Cart = () => {
       await getCartData();
       toast.success("Cart updated");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to update cart");
+      toast.error(getApiErrorMessage(error, "Unable to update cart"));
     }
   };
 
@@ -84,7 +85,7 @@ const Cart = () => {
       await getCartData();
       toast.success("Cart updated");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to update cart");
+      toast.error(getApiErrorMessage(error, "Unable to update cart"));
     }
   };
 
@@ -94,7 +95,7 @@ const Cart = () => {
       await getCartData();
       toast.success("Product removed");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to remove product");
+      toast.error(getApiErrorMessage(error, "Unable to remove product"));
     }
   };
 

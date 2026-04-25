@@ -7,6 +7,7 @@ import {
   API_URL,
   addProductToCart,
   clearPendingCart,
+  getApiErrorMessage,
   getPendingCart,
   saveLogin,
 } from "../utils/api";
@@ -59,7 +60,7 @@ const SignUp = () => {
         navigate("/login", { state: { from: location.state?.from || "/" } });
       }, 1200);
     } catch (error) {
-      const message = error.response?.data?.message || "Signup failed";
+      const message = getApiErrorMessage(error, "Signup failed");
       toast.error(message);
       console.log(error.message);
     }

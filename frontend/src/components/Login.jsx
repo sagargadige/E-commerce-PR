@@ -7,6 +7,7 @@ import {
   API_URL,
   addProductToCart,
   clearPendingCart,
+  getApiErrorMessage,
   getPendingCart,
   saveLogin,
 } from "../utils/api";
@@ -50,10 +51,7 @@ const Login = () => {
       }, 1200);
     } catch (error) {
       console.log(error.message);
-      const message =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        "Login failed";
+      const message = getApiErrorMessage(error, "Login failed");
       toast.error(message);
 
       if (message.toLowerCase().includes("user not found")) {

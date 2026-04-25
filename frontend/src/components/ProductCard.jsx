@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
   addProductToCart,
   fallbackImage,
+  getApiErrorMessage,
   getProductId,
   getProductImage,
   savePendingCart,
@@ -35,7 +36,7 @@ const ProductCard = ({ product, onAdded }) => {
         onAdded();
       }
     } catch (error) {
-      const message = error.response?.data?.message || "Please login again";
+      const message = getApiErrorMessage(error, "Please login again");
       toast.error(message);
       if (error.response?.status === 401) {
         savePendingCart(productId, "/cart");

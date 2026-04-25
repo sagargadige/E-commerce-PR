@@ -1,7 +1,44 @@
 import axios from "axios";
 import { getProductImageUrl } from "./productImages.js";
 
-export const API_URL = "https://e-commerce-pr.onrender.com";
+const trimTrailingSlash = (value) => {
+  return String(value || "").trim().replace(/\/+$/, "");
+};
+
+const DEFAULT_LOCAL_BACKEND_URL = "http://localhost:3200";
+const DEFAULT_REMOTE_BACKEND_URL = "https://e-commerce-pr.onrender.com";
+
+export const API_URL = trimTrailingSlash(
+  import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV ? DEFAULT_LOCAL_BACKEND_URL : "")
+);
+
+export const BACKEND_URL = trimTrailingSlash(
+  import.meta.env.VITE_BACKEND_URL ||
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV
+      ? DEFAULT_LOCAL_BACKEND_URL
+      : DEFAULT_REMOTE_BACKEND_URL)
+);
+
+export const getApiErrorMessage = (
+  error,
+  fallbackMessage = "Something went wrong",
+) => {
+  const message = error?.response?.data?.message || error?.response?.data?.error;
+
+  if (message) {
+    return message;
+  }
+
+  if (error?.code === "ERR_NETWORK" || error?.message === "Network Error") {
+    return import.meta.env.DEV
+      ? "Unable to reach backend. Check that the backend server is running."
+      : "Unable to reach server. Please try again in a moment.";
+  }
+
+  return fallbackMessage;
+};
 
 export const authHeader = (token = localStorage.getItem("token")) => {
   return {
@@ -70,7 +107,7 @@ export const getProductImage = (product) => {
     return imageUrl;
   }
 
-  return `${API_URL}/${imageUrl.replace(/^\/+/, "")}`;
+  return `${BACKEND_URL}/${imageUrl.replace(/^\/+/, "")}`;
 };
 
 export const fallbackImage =

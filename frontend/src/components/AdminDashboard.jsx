@@ -7,6 +7,7 @@ import {
   API_URL,
   authHeader,
   fallbackImage,
+  getApiErrorMessage,
   getCartsFromResponse,
   getProductImage,
   getProductsFromResponse,
@@ -30,7 +31,7 @@ const AdminDashboard = () => {
       const data = getProductsFromResponse(res);
       setProducts(data);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to load products");
+      toast.error(getApiErrorMessage(error, "Unable to load products"));
     }
   };
 
@@ -108,7 +109,7 @@ const AdminDashboard = () => {
       resetForm();
       getAllProduct();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to create product");
+      toast.error(getApiErrorMessage(error, "Unable to create product"));
     }
   };
 
@@ -123,7 +124,7 @@ const AdminDashboard = () => {
       resetForm();
       getAllProduct();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to update product");
+      toast.error(getApiErrorMessage(error, "Unable to update product"));
     }
   };
 
@@ -133,7 +134,7 @@ const AdminDashboard = () => {
       toast.success(res.data.message || "Product deleted");
       getAllProduct();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Unable to delete product");
+      toast.error(getApiErrorMessage(error, "Unable to delete product"));
     }
   };
 
